@@ -33,3 +33,11 @@ for i in cost_breakdown.items():
     x = i[0]
     y = i[1]
     print("Those staying on night {x} will pay {y}".format(x=x, y=y))
+
+
+
+"""
+NEXT TASK:
+1. Make this more robust with error handling for input strings that are inaccurate to the expected input using a while loop.
+2. Add the ability to input the names of those staying, and calculate the totals for each person based on how many nights they are staying.
+"""
