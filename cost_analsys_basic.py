@@ -8,7 +8,7 @@ def nightly_count(nights):
         x += 1
     return people_per_night
 
-def cost_analsys(base_cost, rate, people_per_night):
+def cost_analsys(rate, people_per_night):
     nightly_cost = {}
     for i in people_per_night.items():
         nightly_cost[i[0]] = (float("%.2f" % (rate / i[1])))
