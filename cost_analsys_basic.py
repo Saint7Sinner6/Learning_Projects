@@ -8,21 +8,28 @@ def nightly_count(nights):
         x += 1
     return people_per_night
 
-def cost_analsys(base_cost, rate, people_per_night)
+def cost_analsys(base_cost, rate, people_per_night):
     nightly_cost = {}
     for i in people_per_night.items():
-        nightly_cost[i[0]] = (float("%.2f" % (rate / i[1])) + base_cost)
+        nightly_cost[i[0]] = (float("%.2f" % (rate / i[1])))
     return nightly_cost
 
 # COLLECT VARIABLES
 nights = int(input("Total nights you will be staying: "))
 people_per_night = nightly_count(nights)
-tax = int(input("Tax: "))
-fees = int(input("Total of other fees: ")) + tax
-rate = int(input("Nightly rate: "))
+tax = float(input("Tax: "))
+fees = float(input("Total of other fees: ")) + tax
+rate = float(input("Nightly rate: "))
 people = int(max(people_per_night.values()))
 base_cost = fees / people
 
 # Return Values to user
 cost_breakdown = cost_analsys(base_cost, rate, people_per_night)
-print(cost_breakdown)
+
+print("Additional details are as follows: ")
+print("Because there are {x} people, each person will pay a one-time {y} in addition to their nightly rate".format(x=people, y=base_cost))
+
+for i in cost_breakdown.items():
+    x = i[0]
+    y = i[1]
+    print("Those staying on night {x} will pay {y}".format(x=x, y=y))
