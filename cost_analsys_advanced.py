@@ -1,3 +1,30 @@
+"""Class Creation"""
+"""
+Default Requirements and attributes:
+
+The premis is going to be creating a nested dictionary where each instantiated object appends to a dictionary and contains the elements for nights, cost, etc :
+Eg. {name_key : {nights:[1, 3, 4], total:$_value, }
+
+1. Intake total number of nights from a pre-defined variable (feed this through via the for loop)
+2. 
+3. Append the name as key and a list as value to dictionary
+"""
+
+# Gather names & number of days staying per person.
+def guest_info(nights):
+    guests = {}
+    persist = "continue"
+    while persist.lower() != "done":
+        name = input("What is the guest's name? ")
+        name = name.capitalize()
+        days = int(input("How many days will this person be staying? "))
+        while days > int(nights) or days <= 0:
+            days = int(input("Please input a number less than {x} and greater than 0: ".format(x=nights)))
+        guests.update({name:days})
+        persist = input("Type 'done' if you are finished adding guests or enter/return if you have more to add: ")
+    return guests
+
+
 #Output of this function is a dictionary. Day number is key, person count is value.
 def nightly_count(nights):
     people_per_night = {}
@@ -16,6 +43,9 @@ def cost_analsys(rate, people_per_night):
 
 # COLLECT VARIABLES
 nights = int(input("Total nights you will be staying: "))
+while nights <= 0:
+    nights = int(input("Total nights you will be staying (must be greater than 0): "))
+guests = guest_info(nights)
 people_per_night = nightly_count(nights)
 tax = float(input("Tax: "))
 fees = float(input("Total of other fees: ")) + tax
