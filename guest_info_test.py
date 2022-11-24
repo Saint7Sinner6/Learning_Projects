@@ -4,10 +4,16 @@ def guest_info(nights):
     while persist.lower() != "done":
         name = input("What is the guest's name? ")
         name = name.capitalize()
-        days = int(input("How many days will this person be staying? "))
-        while days > int(nights) or days <= 0:
-            days = int(input("Please input a number less than {x} and greater than 0: ".format(x=nights)))
-        guests.update({name:days})
+        
+        arrival_day = int(input("Which day will this person arrive? Please enter any number 1 - {nights}: ".format(nights=nights)))
+        while arrival_day > int(nights) or arrival_day <= 0:
+            arrival_day = int(input("Your number doesn't fit the paramaters--any number from 1 - {nights}. Please indicate which day this person will arrive: ".format(nights=nights)))
+       
+        departure_day = int(input("Which day will this person depart? Please enter any number {arrival} - {nights}: ".format(arrival=arrival_day, nights=nights)))
+        while departure_day <= arrival_day or arrival_day > nights:
+            departure_day = int(input("Your number doesn't fit the paramaters--any number from {arrival} - {nights}. Please indicate which day this person will arrive: ".format(arrival=arrival_day, nights=nights)))
+        
+        guests.update({name:[*range(arrival_day,departure_day+1)]})
         persist = input("Type 'done' if you are finished adding guests or enter/return if you have more to add: ")
     return guests
 
