@@ -24,7 +24,7 @@ people = int(max(people_per_night.values()))
 base_cost = fees / people
 
 # Return Values to user
-cost_breakdown = cost_analsys(base_cost, rate, people_per_night)
+cost_breakdown = cost_analsys(rate, people_per_night)
 
 print("Additional details are as follows: ")
 print("Because there are {x} people, each person will pay a one-time {y} in addition to their nightly rate".format(x=people, y=base_cost))
