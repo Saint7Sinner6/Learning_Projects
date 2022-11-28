@@ -1,13 +1,9 @@
-"""Class Creation"""
 """
-Default Requirements and attributes:
+Please note that at this time, there is no error handling built in.
+Any inaccurate input will likely result in program failure.
 
-The premis is going to be creating a nested dictionary where each instantiated object appends to a dictionary and contains the elements for nights, cost, etc :
-Eg. {name_key : {nights:[1, 3, 4], total:$_value, }
-
-1. Intake total number of nights from a pre-defined variable (feed this through via the for loop)
-2. 
-3. Append the name as key and a list as value to dictionary
+NEXT TASK:
+1. Make this more robust with error handling for input strings that are inaccurate to the expected input using a while loop.
 """
 
 # Gather name & number of days staying per person, then output a dictionary.
@@ -27,51 +23,66 @@ def guest_info(nights):
             departure_day = int(input("Your number doesn't fit the paramaters--any number from {arrival} - {nights}. Please indicate which day this person will arrive: ".format(arrival=arrival_day, nights=nights)))
         
         guests.update({name:[*range(arrival_day,departure_day+1)]})
+        print(guests)
         persist = input("Type 'done' if you are finished adding guests or enter/return if you have more to add: ")
     return guests
 
-
-#Output of this function is a dictionary. Day number is key, person count is value.
-def nightly_count(guests):
-    for i in guests:
-        count = int(input("How many people will be staying on night {}? ".format(str(x))))
-        people_per_night[x] = count
-        x += 1
+#Output of this function is a dictionary. {day:person_count}
+def nightly_count(guests, nights):
+    people_per_night = {}
+    for i in range(1, nights+1):
+        counter = 0
+        for j in guests.values():
+            if i in j:
+                counter += 1
+        people_per_night[i] = counter
     return people_per_night
 
+# Output of this function is a dictionary that returns {day:cost/people}
 def cost_analsys(rate, people_per_night):
     nightly_cost = {}
     for i in people_per_night.items():
         nightly_cost[i[0]] = (float("%.2f" % (rate / i[1])))
     return nightly_cost
 
+# Output of this function is a dictionary that returns {name:total_price}
+def payment_list(base_cost, guests, nightly_cost):
+    name_to_cost = {}
+    cost = 0
+    for i in guests.items():
+        for j in nightly_cost.items():
+            if j[0] in i[1]:
+                cost += float(j[1])
+        cost += float(base_cost)
+        name_to_cost.update({i[0]:cost})
+        cost = 0
+    return name_to_cost
+
 # COLLECT VARIABLES
 nights = int(input("Total nights you will be staying: "))
 while nights <= 0:
     nights = int(input("Total nights you will be staying (must be greater than 0): "))
 guests = guest_info(nights)
-people_per_night = nightly_count(nights)
+people_per_night = nightly_count(guests, nights)
 tax = float(input("Tax: "))
 fees = float(input("Total of other fees: ")) + tax
 rate = float(input("Nightly rate: "))
 people = int(max(people_per_night.values()))
 base_cost = fees / people
 
-# Return Values to user
-cost_breakdown = cost_analsys(base_cost, rate, people_per_night)
+# RETURN VALUES TO USER
+nightly_cost = cost_analsys(rate, people_per_night)
+name_to_cost = payment_list(base_cost, guests, nightly_cost)
 
 print("Additional details are as follows: ")
 print("Because there are {x} people, each person will pay a one-time {y} in addition to their nightly rate".format(x=people, y=base_cost))
 
-for i in cost_breakdown.items():
+for i in nightly_cost.items():
     x = i[0]
     y = i[1]
-    print("Those staying on night {x} will pay {y}".format(x=x, y=y))
+    print("{x} will pay {y}".format(x=x, y=y))
 
-
-
-"""
-NEXT TASK:
-1. Make this more robust with error handling for input strings that are inaccurate to the expected input using a while loop.
-2. Add the ability to input the names of those staying, and calculate the totals for each person based on how many nights they are staying.
-"""
+for i in name_to_cost.items():
+    x = i[0]
+    y = i[1]
+    print("{x} will pay {y}".format(x=x, y=y))
