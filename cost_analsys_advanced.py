@@ -77,6 +77,8 @@ name_to_cost = payment_list(base_cost, guests, nightly_cost)
 print("Additional details are as follows: ")
 print("Because there are {x} people, each person will pay a one-time {y} in addition to their nightly rate".format(x=people, y=base_cost))
 
+# PRINT LOOPS TO OUTPUT NIGHT COST SPLIT AND NAME TO COST SPLIT.
+
 for i in nightly_cost.items():
     x = i[0]
     y = i[1]
@@ -86,3 +88,8 @@ for i in name_to_cost.items():
     x = i[0]
     y = i[1]
     print("{x} will pay {y}".format(x=x, y=y))
+
+for i in guests.items():
+    x = i[0]
+    y = i[1]
+    print("{x} is staying on the following nights: {y}".format(x=x, y=y))
