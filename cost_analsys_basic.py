@@ -35,7 +35,6 @@ for i in cost_breakdown.items():
     print("Those staying on night {x} will pay {y}".format(x=x, y=y))
 
 
-
 """
 NEXT TASK:
 1. Make this more robust with error handling for input strings that are inaccurate to the expected input using a while loop.
