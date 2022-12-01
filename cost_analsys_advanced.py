@@ -7,21 +7,33 @@ NEXT TASK:
 """
 
 # Gather name & number of days staying per person, then output a dictionary.
-def guest_info(nights):
+def guest_info(nights): 
     guests = {}
     persist = "continue"
     while persist.lower() != "done":
         name = input("What is the guest's name? ")
         name = name.capitalize()
         
-        arrival_day = int(input("Which day will this person arrive? Please enter any number 1 - {nights}: ".format(nights=nights)))
-        while arrival_day > int(nights) or arrival_day <= 0:
-            arrival_day = int(input("Your number doesn't fit the paramaters--any number from 1 - {nights}. Please indicate which day this person will arrive: ".format(nights=nights)))
-       
-        departure_day = int(input("Which day will this person depart? Please enter any number {arrival} - {nights}: ".format(arrival=arrival_day, nights=nights)))
-        while departure_day <= arrival_day or arrival_day > nights:
-            departure_day = int(input("Your number doesn't fit the paramaters--any number from {arrival} - {nights}. Please indicate which day this person will arrive: ".format(arrival=arrival_day, nights=nights)))
+        while True: # Arrival Day
+            try:
+                arrival_day = int(input("Which day will this person arrive? Please enter any number 1 - {nights}: ".format(nights=nights)))
+                while arrival_day > int(nights) or arrival_day <= 0:
+                    arrival_day = int(input("Your number doesn't fit the paramaters--any number from 1 - {nights}. Please indicate which day this person will arrive: ".format(nights=nights)))
+                break
+
+            except ValueError:
+                print("Invalid input, please try again.")
         
+        while True: # Departure Day
+            try:
+                departure_day = int(input("Which day will this person depart? Please enter any number {arrival} - {nights}: ".format(arrival=arrival_day, nights=nights)))
+                while departure_day <= arrival_day or arrival_day > nights:
+                    departure_day = int(input("Your number doesn't fit the paramaters--any number from {arrival} - {nights}. Please indicate which day this person will arrive: ".format(arrival=arrival_day, nights=nights)))
+                break
+
+            except ValueError:
+                print("Invalid input, please try again.")
+
         guests.update({name:[*range(arrival_day,departure_day+1)]})
         print(guests)
         persist = input("Type 'done' if you are finished adding guests or enter/return if you have more to add: ")
@@ -59,16 +71,52 @@ def payment_list(base_cost, guests, nightly_cost):
     return name_to_cost
 
 # COLLECT VARIABLES
-nights = int(input("Total nights you will be staying: "))
-while nights <= 0:
-    nights = int(input("Total nights you will be staying (must be greater than 0): "))
+while True: # Nights
+    try:
+        nights = int(input("Total nights you will be staying: "))
+        while nights <= 0:
+            nights = int(input("Total nights you will be staying (must be greater than 0): "))
+        break
+    except ValueError:
+        print("Invalid input, please try again. Must be a number greater than zero")
+
 guests = guest_info(nights)
 people_per_night = nightly_count(guests, nights)
-tax = float(input("Tax: "))
-fees = float(input("Total of other fees: ")) + tax
-rate = float(input("Nightly rate: "))
-people = int(max(people_per_night.values()))
-base_cost = fees / people
+
+while True: # Tax
+    try:
+        tax = float(input("Tax: "))
+        break
+    except ValueError:
+        print("Invalid input, please try again. Must be a number greater than zero")
+
+while True: # Fees
+    try:
+        fees = float(input("Total of other fees: ")) + tax
+        break
+    except ValueError:
+        print("Invalid input, please try again. Must be a number greater than zero")
+
+while True: # Rate
+    try:
+        rate = float(input("Nightly rate: "))
+        break
+    except ValueError:
+        print("Invalid input, please try again.")
+
+while True: # People
+    try:
+        people = int(max(people_per_night.values()))
+        break
+    except ValueError:
+        print("Invalid input, please try again.")
+
+while True: # Base Cost
+    try:
+        base_cost = fees / people
+        break
+    except ValueError:
+        print("Invalid input, please try again.")
 
 # RETURN VALUES TO USER
 nightly_cost = cost_analsys(rate, people_per_night)
