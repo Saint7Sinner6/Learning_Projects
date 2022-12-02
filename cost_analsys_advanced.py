@@ -141,3 +141,4 @@ for i in guests.items():
     x = i[0]
     y = i[1]
     print("{x} is staying on the following nights: {y}".format(x=x, y=y))
+
