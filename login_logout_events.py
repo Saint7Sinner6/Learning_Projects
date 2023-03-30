@@ -7,9 +7,9 @@ def current_users(events):
     for event in events:
         if event.machine not in machines:
             machines[event.machine] = set()
-        if event.type = "login":
+        if event.type == "login":
             machines[event.machine].add(event.user)
-        elif event.type = "logout":
+        elif event.type == "logout":
             machines[event.machine].remove(event.user)
     return machines
 
