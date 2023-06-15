@@ -47,8 +47,10 @@ def calculate_payments(base_cost, guests, nightly_cost):
 while True:
     try:
         nights = prompt_input("Total nights you will be staying (must be greater than 0): ", int)
-        if nights == 0:
-            print("You entered 0, please try again.")
+        if nights != 0:
+            break
+    except:
+        print("You entered 0, please try again.")
             continue
     except:
         break
