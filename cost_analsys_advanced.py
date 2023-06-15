@@ -3,10 +3,10 @@
 """
 COST SPLIT CALCULATOR FOR VACATION AND TRAVEL ARRANGEMENTS.
 """
-print("Thank you for using this cost calculator." \n
-      "You will be asked a series of questions regarding your trip, then we will calculate the split." \n
-      "Most accomidations have a flat rate fee and taxes based on the number of nights you will be staying, so everyone will split that equally." \n
-      "The nightly rate for each person based on the night will be calculated separately, then each person will be assigned their grand total")
+print("Thank you for using this cost calculator.\n"
+      "You will be asked a series of questions regarding your trip, then we will calculate the split.\n"
+      "Most accommodations have a flat rate fee and taxes based on the number of nights you will be staying, so everyone will split that equally.\n"
+      "The nightly rate for each person based on the night will be calculated separately, then each person will be assigned their grand total.")
 
 # INPUT ERROR HANDLING
 def prompt_input(prompt, validation_func):
