@@ -1,95 +1,74 @@
-"""
-Please note that at this time, there is no error handling built in.
-Any inaccurate input will likely result in program failure.
+#!/usr/bin/env python3
 
-NEXT TASK:
-1. Make this more robust with error handling for input strings that are inaccurate to the expected input using a while loop.
 """
+COST SPLIT CALCULATOR FOR VACATION AND TRAVEL ARRANGEMENTS.
+"""
+print("Thank you for using this cost calculator." \n
+      "You will be asked a series of questions regarding your trip, then we will calculate the split." \n
+      "Most accomidations have a flat rate fee and taxes based on the number of nights you will be staying, so everyone will split that equally." \n
+      "The nightly rate for each person based on the night will be calculated separately, then each person will be assigned their grand total")
 
-# Gather name & number of days staying per person, then output a dictionary.
-def guest_info(nights):
+# INPUT ERROR HANDLING
+def prompt_input(prompt, validation_func):
+    while True:
+        try:
+            value = validation_func(input(prompt))
+            return value
+        except ValueError:
+            print("Invalid input, please try again.")
+
+def get_guest_info(nights): 
     guests = {}
-    persist = "continue"
-    while persist.lower() != "done":
-        name = input("What is the guest's name? ")
-        name = name.capitalize()
+    while True:
+        name = prompt_input("What is the guest's name? ", str).capitalize()
+        arrival_day = prompt_input("Which day will this person arrive? Please enter any number 1 - {}: ".format(nights), int)
+        departure_day = prompt_input("Which day will this person depart? Please enter any number {} - {}: ".format(arrival_day, nights), int)
+        guests.update({name:[*range(arrival_day, departure_day+1)]})
         
-        arrival_day = int(input("Which day will this person arrive? Please enter any number 1 - {nights}: ".format(nights=nights)))
-        while arrival_day > int(nights) or arrival_day <= 0:
-            arrival_day = int(input("Your number doesn't fit the paramaters--any number from 1 - {nights}. Please indicate which day this person will arrive: ".format(nights=nights)))
-       
-        departure_day = int(input("Which day will this person depart? Please enter any number {arrival} - {nights}: ".format(arrival=arrival_day, nights=nights)))
-        while departure_day <= arrival_day or arrival_day > nights:
-            departure_day = int(input("Your number doesn't fit the paramaters--any number from {arrival} - {nights}. Please indicate which day this person will arrive: ".format(arrival=arrival_day, nights=nights)))
-        
-        guests.update({name:[*range(arrival_day,departure_day+1)]})
-        print(guests)
         persist = input("Type 'done' if you are finished adding guests or enter/return if you have more to add: ")
+        if persist.lower() == 'done':
+            break
     return guests
 
-#Output of this function is a dictionary. {day:person_count}
-def nightly_count(guests, nights):
-    people_per_night = {}
-    for i in range(1, nights+1):
-        counter = 0
-        for j in guests.values():
-            if i in j:
-                counter += 1
-        people_per_night[i] = counter
-    return people_per_night
+# RETURNS DICT: {day:total}
+def calculate_counts(guests, nights):
+    return {i: sum(i in j for j in guests.values()) for i in range(1, nights+1)}
 
-# Output of this function is a dictionary that returns {day:cost/people}
-def cost_analsys(rate, people_per_night):
-    nightly_cost = {}
-    for i in people_per_night.items():
-        nightly_cost[i[0]] = (float("%.2f" % (rate / i[1])))
-    return nightly_cost
+# RETURNS DICT: {day:cost}
+# COMPENSATES DIVISION FUNCTION FOR 0 GUESTS ON ANY NIGHT ALSO
+def calculate_costs(rate, people_per_night):
+    return {i: round(rate / count, 2) if count > 0 else 0 for i, count in people_per_night.items()}
 
-# Output of this function is a dictionary that returns {name:total_price}
-def payment_list(base_cost, guests, nightly_cost):
-    name_to_cost = {}
-    cost = 0
-    for i in guests.items():
-        for j in nightly_cost.items():
-            if j[0] in i[1]:
-                cost += float(j[1])
-        cost += float(base_cost)
-        name_to_cost.update({i[0]:cost})
-        cost = 0
-    return name_to_cost
+# RETURNS DICT: {name:cost}
+def calculate_payments(base_cost, guests, nightly_cost):
+    return {name: sum(nightly_cost[night] for night in nights) + base_cost for name, nights in guests.items()}
 
-# COLLECT VARIABLES
-nights = int(input("Total nights you will be staying: "))
-while nights <= 0:
-    nights = int(input("Total nights you will be staying (must be greater than 0): "))
-guests = guest_info(nights)
-people_per_night = nightly_count(guests, nights)
-tax = float(input("Tax: "))
-fees = float(input("Total of other fees: ")) + tax
-rate = float(input("Nightly rate: "))
-people = int(max(people_per_night.values()))
-base_cost = fees / people
+# COLLECT USER INPUT
+nights = prompt_input("Total nights you will be staying (must be greater than 0): ", int)
+guests = get_guest_info(nights)
+people_per_night = calculate_costs(guests, nights)
+tax = prompt_input("Tax: ", float)
+fees = prompt_input("Total of other fees: ", float) + tax
+rate = prompt_input("Nightly rate: ", float)
+people = max(people_per_night.values())
+base_cost = fees / people if people > 0 else 0
 
 # RETURN VALUES TO USER
-nightly_cost = cost_analsys(rate, people_per_night)
-name_to_cost = payment_list(base_cost, guests, nightly_cost)
+nightly_cost = calculate_costs(rate, people_per_night)
+name_to_cost = calculate_payments(base_cost, guests, nightly_cost)
 
 print("Additional details are as follows: ")
-print("Because there are {x} people, each person will pay a one-time {y} in addition to their nightly rate".format(x=people, y=base_cost))
+print(f"Because there are {people} people, each person will pay a one-time {base_cost} in addition to their nightly rate.")
 
-# PRINT LOOPS TO OUTPUT NIGHT COST SPLIT AND NAME TO COST SPLIT.
+for day, cost in nightly_cost.items():
+    print(f"Day {day} will cost {cost}")
+    
+for name, cost in name_to_cost.items():
+    print(f"{name} will pay {cost}")
 
-for i in nightly_cost.items():
-    x = i[0]
-    y = i[1]
-    print("{x} will pay {y}".format(x=x, y=y))
+for name, nights in guests.items():
+    print(f"{name} is staying on the following nights: {nights}")
 
-for i in name_to_cost.items():
-    x = i[0]
-    y = i[1]
-    print("{x} will pay {y}".format(x=x, y=y))
-
-for i in guests.items():
-    x = i[0]
-    y = i[1]
-    print("{x} is staying on the following nights: {y}".format(x=x, y=y))
+for guests, nights in people_per_night.items():
+    if guests == 0:
+        print(f"No one is stayin on night {nights}. Consider removing this day from your reservation. Otherwise, someone will have to pay {rate}")
