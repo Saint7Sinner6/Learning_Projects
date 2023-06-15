@@ -44,7 +44,15 @@ def calculate_payments(base_cost, guests, nightly_cost):
     return {name: sum(nightly_cost[night] for night in nights) + base_cost for name, nights in guests.items()}
 
 # COLLECT USER INPUT
-nights = prompt_input("Total nights you will be staying (must be greater than 0): ", int)
+while True:
+    try:
+        nights = prompt_input("Total nights you will be staying (must be greater than 0): ", int)
+        if nights == 0:
+            print("You entered 0, please try again.")
+            continue
+    except:
+        break
+
 guests = get_guest_info(nights)
 people_per_night = calculate_costs(guests, nights)
 tax = prompt_input("Tax: ", float)
