@@ -51,12 +51,9 @@ while True:
             break
     except:
         print("You entered 0, please try again.")
-            continue
-    except:
-        break
 
 guests = get_guest_info(nights)
-people_per_night = calculate_costs(guests, nights)
+people_per_night = calculate_counts(guests, nights)
 tax = prompt_input("Tax: ", float)
 fees = prompt_input("Total of other fees: ", float) + tax
 rate = prompt_input("Nightly rate: ", float)
@@ -79,6 +76,6 @@ for name, cost in name_to_cost.items():
 for name, nights in guests.items():
     print(f"{name} is staying on the following nights: {nights}")
 
-for guests, nights in people_per_night.items():
-    if guests == 0:
-        print(f"No one is stayin on night {nights}. Consider removing this day from your reservation. Otherwise, someone will have to pay {rate}")
+for day, guest_count in people_per_night.items():
+    if guest_count == 0:
+        print(f"No one is stayin on night {day}. Consider removing this day from your reservation. Otherwise, someone will have to pay {rate}")
